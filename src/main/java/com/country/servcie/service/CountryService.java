@@ -1,42 +1,48 @@
 package com.country.servcie.service;
 
+import com.country.servcie.request.CityRequest;
 import com.country.servcie.request.CountryRequest;
+import com.country.servcie.request.StateRequest;
 
+import java.util.List;
+
+/**
+ * Service interface for Country, State, and City operations.
+ * Defines all business logic method signatures.
+ */
 public interface CountryService {
 
     String createCountry(CountryRequest request);
 
-    String getAllCountries();
+    List<CountryRequest> getAllCountries();
 
-    String getCountryByCountryCode(String countryCode);
+    CountryRequest getCountryByCountryCode(String countryCode);
 
-    String getCountryByCountryName(String countryName);
+    CountryRequest getCountryByCountryName(String countryName);
 
-    String getCountryByIsdCode(String isdCode);
+    String updateCountryByCountryId(Long countryId, CountryRequest request);
 
-    String getCountriesByCurrencyName(String currencyName);
+    String deleteCountryByCountryId(Long countryId);
 
-    String getCountryByCapital(String capital);
+    List<StateRequest> getAllStates();
 
-    String getAllStates();
+    List<StateRequest> getStateByCountryId(Long countryId);
 
-    String getStatesByCountryCode(String countryCode);
+    StateRequest getStateByStateCode(String stateCode);
 
-    String getStateByStateCode(String stateCode);
+    StateRequest getStateByStateName(String stateName);
 
-    String getStateByStateName(String stateName);
+    StateRequest getStateByStateCapital(String stateCapital);
 
-    String getStateByStateCapital(String stateCapital);
+    String updateStateName(Long stateId, String newStateName);
 
-    String getStateByGstCode(String gstCode);
+    String updateStateCapital(Long stateId, String newCapital);
 
-    String getAllCities();
+    String deleteState(Long stateId);
 
-    String getCitiesByStateCode(String stateCode);
+    List<CityRequest> getAllCities();
 
-    String getCityByCityCode(String cityCode);
+    List<CityRequest> getCitiesByStateId(Long stateId);
 
-    String getCityByCityName(String cityName);
-
-    String getCityByPincode(Integer pincode);
+    CityRequest getCitiesByCityCode(String cityCode);
 }

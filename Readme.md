@@ -54,7 +54,7 @@
 ### Country Endpoints
 
 * **POST**  : 'http://localhost:8080/api/country/v1/create'
-* **GET**   : 'http://localhost:8080/api/country/v1/contries'
+* **GET**   : 'http://localhost:8080/api/country/v1/countries'
 * **GET**   : 'http://localhost:8080/api/country/v1/getCountryByCountryCode/{countryCode}'
 * **GET**   : 'http://localhost:8080/api/country/v1/getCountryByCountryName/{countryName}'
 * **PUT**   : 'http://localhost:8080/api/country/v1/updateCountryByCountryId/{countryId}'
