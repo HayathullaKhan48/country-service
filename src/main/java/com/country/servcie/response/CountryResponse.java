@@ -1,6 +1,6 @@
-package com.country.servcie.request;
+package com.country.servcie.response;
 
-import jakarta.validation.constraints.NotBlank;
+import com.country.servcie.request.StateRequest;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
@@ -8,24 +8,18 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Request class for creating or updating a country.
- * Includes nested states and cities as part of the hierarchy.
- */
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CountryRequest {
-
-    @NotBlank(message = "Country code cannot be blank")
+public class CountryResponse {
+    private Long countryId;
     private String countryCode;
-
-    @NotBlank(message = "Country name cannot be blank")
     private String countryName;
     private String officialName;
     private String isdCode;
@@ -38,6 +32,7 @@ public class CountryRequest {
     private String officialLanguage;
     private String timeZones;
     private String status;
-    private List<StateRequest> states;
-
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
+    private List<StateResponse> states;
 }

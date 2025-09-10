@@ -1,4 +1,4 @@
-package com.country.servcie.request;
+package com.country.servcie.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,17 +9,14 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-/**
- * Request class for City details.
- * Part of StateRequest for nested data submission
- */
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CityRequest {
+public class CityResponse {
+    private Long cityId;
     private String cityCode;
     private String cityName;
     private String cityType;
@@ -27,5 +24,6 @@ public class CityRequest {
     private Double cityAreaSqKm;
     private Integer pinCode;
     private String status;
-
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
 }

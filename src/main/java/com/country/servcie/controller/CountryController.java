@@ -3,8 +3,16 @@ package com.country.servcie.controller;
 import com.country.servcie.request.CityRequest;
 import com.country.servcie.request.CountryRequest;
 import com.country.servcie.request.StateRequest;
+import com.country.servcie.response.ApiResponse;
+import com.country.servcie.response.CountryResponse;
 import com.country.servcie.service.CountryService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,90 +27,35 @@ import java.util.List;
 public class CountryController {
 
     private final CountryService countryService;
+    private static final Logger logger = LoggerFactory.getLogger(CountryController.class);
 
+    /**
+     * Create a new country with optional states and cities.
+     *
+     * @param request CountryRequest
+     * @return CountryResponse
+     */
     @PostMapping("/create")
-    public String createCountry(@RequestBody CountryRequest request) {
-        return countryService.createCountry(request);
+    @Operation(summary = "Create Country", description = "create a new country with states and cities")
+    public ResponseEntity<CountryResponse> createCountry(@Valid @RequestBody CountryRequest request) {
+        logger.info("Received createCountry request for countryCode: {}",request.getCountryCode());
+        return ResponseEntity.ok(countryService.createCountry(request));
     }
 
+    /**
+     * Retrieve a paginated list of all countries.
+     *
+     * @param page page number (default 0)
+     * @param size page size (default 10)
+     * @return Page of CountryResponse
+     */
     @GetMapping("/countries")
-    public List<CountryRequest> getAllCountries() {
-        return countryService.getAllCountries();
-    }
-
-    @GetMapping("/getCountryByCountryCode/{countryCode}")
-    public CountryRequest getCountryByCountryCode(@PathVariable String countryCode) {
-        return countryService.getCountryByCountryCode(countryCode);
-    }
-
-    @GetMapping("/getCountryByCountryName/{countryName}")
-    public CountryRequest getCountryByCountryName(@PathVariable String countryName) {
-        return countryService.getCountryByCountryName(countryName);
-    }
-
-    @PutMapping("/updateCountryByCountryId/{countryId}")
-    public String updateCountryByCountryId(@PathVariable Long countryId,
-                                           @RequestBody CountryRequest request) {
-        return countryService.updateCountryByCountryId(countryId, request);
-    }
-
-    @DeleteMapping("/deleteCountryByCountryId/{countryId}")
-    public String deleteCountryByCountryId(@PathVariable Long countryId) {
-        return countryService.deleteCountryByCountryId(countryId);
-    }
-
-    @GetMapping("/getStates")
-    public List<StateRequest> getAllStates() {
-        return countryService.getAllStates();
-    }
-
-    @GetMapping("/getStateByCountryId/{countryId}")
-    public List<StateRequest> getStateByCountryId(@PathVariable Long countryId) {
-        return countryService.getStateByCountryId(countryId);
-    }
-
-    @GetMapping("/getStateByStateCode/{stateCode}")
-    public StateRequest getStateByStateCode(@PathVariable String stateCode) {
-        return countryService.getStateByStateCode(stateCode);
-    }
-
-    @GetMapping("/getStateByStateName/{stateName}")
-    public StateRequest getStateByStateName(@PathVariable String stateName) {
-        return countryService.getStateByStateName(stateName);
-    }
-
-    @GetMapping("/getStateByStateCapital/{stateCapital}")
-    public StateRequest getStateByStateCapital(@PathVariable String stateCapital) {
-        return countryService.getStateByStateCapital(stateCapital);
-    }
-
-    @PatchMapping("/updateStateByStateName/{stateId}/{newStateName}")
-    public String updateStateName(@PathVariable Long stateId, @PathVariable String newStateName) {
-        return countryService.updateStateName(stateId, newStateName);
-    }
-
-    @PatchMapping("/updateStateByCapital/{stateId}/{newCapital}")
-    public String updateStateCapital(@PathVariable Long stateId, @PathVariable String newCapital) {
-        return countryService.updateStateCapital(stateId, newCapital);
-    }
-
-    @DeleteMapping("/deleteState/{stateId}")
-    public String deleteState(@PathVariable Long stateId) {
-        return countryService.deleteState(stateId);
-    }
-
-    @GetMapping("/getCities")
-    public List<CityRequest> getAllCities(){
-        return countryService.getAllCities();
-    }
-
-    @GetMapping("/getCitiesByStateId/{stateId)")
-    public List<CityRequest> getCitiesByStateId(@PathVariable Long stateId){
-        return countryService.getCitiesByStateId(stateId);
-    }
-
-    @GetMapping("/getCitiesByCityCode/{cityCode}")
-    public CityRequest getCitiesByCityCode(@PathVariable String cityCode){
-        return countryService.getCitiesByCityCode(cityCode);
+    @Operation(summary = "Get All Countries", description = "Retrieve all countries with nested states and cities")
+    public ResponseEntity<Page<CountryResponse>> getAllCountries(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+        logger.info("Fetching countries with page={} and size={}", page, size);
+        Page<CountryResponse> countries = countryService.getAllCountries(page,size);
+        return ResponseEntity.ok(countries);
     }
 }

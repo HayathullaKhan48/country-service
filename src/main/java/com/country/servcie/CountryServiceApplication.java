@@ -8,6 +8,7 @@ public class CountryServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CountryServiceApplication.class, args);
+		System.out.println("Country Service Application is Successfully Executing...");
 	}
 
 }
