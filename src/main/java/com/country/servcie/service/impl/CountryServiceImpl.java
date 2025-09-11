@@ -3,6 +3,7 @@ package com.country.servcie.service.impl;
 import com.country.servcie.entity.CityModel;
 import com.country.servcie.entity.CountryModel;
 import com.country.servcie.entity.StateModel;
+import com.country.servcie.exceptions.CountryAlreadyExistsException;
 import com.country.servcie.mapper.CountryMapper;
 import com.country.servcie.repository.CountryRepository;
 import com.country.servcie.request.CityRequest;
@@ -11,6 +12,7 @@ import com.country.servcie.request.StateRequest;
 import com.country.servcie.response.CountryResponse;
 import com.country.servcie.service.CountryService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
@@ -23,6 +25,7 @@ import static com.country.servcie.mapper.CountryMapper.toCountryModel;
 import static com.country.servcie.mapper.CountryMapper.toCountryResponse;
 
 @Service
+@Transactional
 public class CountryServiceImpl implements CountryService {
 
     private static final Logger logger = LoggerFactory.getLogger(CountryServiceImpl.class);
@@ -33,38 +36,44 @@ public class CountryServiceImpl implements CountryService {
     }
 
     /**
-     * Creates a new country if it doesn't already exist by country code.
+     * Creates a new country, saves related states and cities.
      *
-     * @param request CountryRequest object from API
-     * @return CountryResponse mapped from saved CountryModel
+     * @param request Country details from API request
+     * @return {@link CountryResponse} containing saved country, states, and cities
+     * @throws CountryAlreadyExistsException if country code already exists
      */
     @Override
-    @Transactional
     public CountryResponse createCountry(CountryRequest request) {
+        logger.info("Create request received for countryCode: {}", request.getCountryCode());
+
         if (countryRepository.existsByCountryCode(request.getCountryCode())) {
-            throw new RuntimeException("Country with code " + request.getCountryCode() + " already exists");
+            throw new CountryAlreadyExistsException("Country with code " + request.getCountryCode() + " already exists");
         }
         CountryModel countryModel = toCountryModel(request);
         CountryModel savedCountry = countryRepository.save(countryModel);
-        List<StateModel> savedStates = new ArrayList<>();
-        if (request.getStates() != null) {
-            for (StateRequest stateRequest : request.getStates()) {
-                StateModel stateModel = CountryMapper.requestToStateMapper(savedCountry, stateRequest);
-                if (stateRequest.getCities() != null) {
-                    List<CityModel> cityModels = new ArrayList<>();
-                    for (CityRequest cityRequest : stateRequest.getCities()) {
-                        CityModel cityModel = CountryMapper.requestToCitiesMapper(stateModel, cityRequest);
-                        cityModels.add(cityModel);
-                    }
-                    stateModel.setCities(cityModels);
-                }
 
-                savedStates.add(stateModel);
-            }
-            savedCountry.setStates(savedStates);
-        }
+        logger.info("Country created (id={} code={})", savedCountry.getCountryId(), savedCountry.getCountryCode());
+
+        List<StateModel> savedStates = new ArrayList<>();
+        CountryModel finalSavedCountry = savedCountry;
+        request.getStates().forEach(stateRequest -> {
+            StateModel stateModel = CountryMapper.requestToStateMapper(finalSavedCountry, stateRequest);
+
+            List<CityModel> cityModels = new ArrayList<>();
+            stateRequest.getCities().forEach(cityRequest ->
+                    cityModels.add(CountryMapper.requestToCitiesMapper(stateModel, cityRequest))
+            );
+
+            stateModel.setCities(cityModels);
+            savedStates.add(stateModel);
+        });
+
+        savedCountry.setStates(savedStates);
         savedCountry = countryRepository.save(savedCountry);
-        return CountryMapper.toCountryResponse(savedCountry, savedStates);
+
+        logger.info("Country (id={}) created successfully with {} states", savedCountry.getCountryId(), savedStates.size());
+
+        return toCountryResponse(savedCountry, savedStates);
     }
 
     /**
