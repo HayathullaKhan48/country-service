@@ -52,21 +52,21 @@ public class CountryController {
 
     @GetMapping("/getCountryByCountryCode/{countryCode}")
     @Operation(summary = "Get Country by Code", description = "Retrieve a country using its countryCode")
-    public ResponseEntity<CountryResponse> getCountryByCode(@PathVariable String countryCode) {
+    public ResponseEntity<CountryResponse> getCountryByCountryCode(@PathVariable String countryCode) {
         logger.info("Fetching country by code: {}", countryCode);
         return ResponseEntity.ok(countryService.getCountryByCountryCode(countryCode));
     }
 
     @GetMapping("/getCountryByCountryName/{countryName}")
     @Operation(summary = "Get Country by Name", description = "Retrieve a country using its countryName")
-    public ResponseEntity<CountryResponse> getCountryByName(@PathVariable String countryName) {
+    public ResponseEntity<CountryResponse> getCountryByCountryName(@PathVariable String countryName) {
         logger.info("Fetching country by name: {}", countryName);
         return ResponseEntity.ok(countryService.getCountryByCountryName(countryName));
     }
 
     @DeleteMapping("/deleteCountryByCountryId/{countryId}")
     @Operation(summary = "Delete Country (Soft)", description = "Marks the country as inactive instead of deleting permanently")
-    public ResponseEntity<CountryResponse> deleteCountry(@PathVariable Long countryId) {
+    public ResponseEntity<CountryResponse> deleteCountryByCountryId(@PathVariable Long countryId) {
         logger.info("Soft-deleting (mark inactive) country by id: {}", countryId);
         return ResponseEntity.ok(countryService.deleteCountryByCountryId(countryId));
     }
@@ -87,42 +87,42 @@ public class CountryController {
 
     @GetMapping("/getStateByStateCode/{stateCode}")
     @Operation(summary = "Get State by Code", description = "Retrieve a single state using its stateCode")
-    public StateResponse getStateByStateCode(@PathVariable String stateCode) {
+    public List<StateResponse> getStateByStateCode(@PathVariable String stateCode) {
         logger.info("Fetching state by stateCode={}", stateCode);
         return countryService.getStateByStateCode(stateCode);
     }
 
     @GetMapping("/getStateByStateName/{stateName}")
     @Operation(summary = "Get State by Name", description = "Retrieve a single state using its stateName")
-    public StateResponse getStateByStateName(@PathVariable String stateName) {
+    public List<StateResponse> getStateByStateName(@PathVariable String stateName) {
         logger.info("Fetching state by stateName={}", stateName);
         return countryService.getStateByStateName(stateName);
     }
 
     @GetMapping("/getStateByStateCapital/{stateCapital}")
     @Operation(summary = "Get State by Capital", description = "Retrieve a state by its capital city")
-    public StateResponse getStateByStateCapital(@PathVariable String stateCapital) {
+    public List<StateResponse> getStateByStateCapital(@PathVariable String stateCapital) {
         logger.info("Fetching state by stateCapital={}", stateCapital);
         return countryService.getStateByStateCapital(stateCapital);
     }
 
     @PatchMapping("/updateStateByStateName/{stateId}/{newStateName}")
     @Operation(summary = "Update State Name", description = "Updates the name of a state by stateId")
-    public StateResponse updateStateName(@PathVariable Long stateId, @PathVariable String newStateName) {
+    public List<StateResponse> updateStateByStateName(@PathVariable Long stateId, @PathVariable String newStateName) {
         logger.info("Updating state name for stateId={} to newName={}", stateId, newStateName);
-        return countryService.updateStateName(stateId, newStateName);
+        return countryService.updateStateByStateName(stateId, newStateName);
     }
 
     @PatchMapping("/updateStateByCapital/{stateId}/{newCapital}")
     @Operation(summary = "Update State Capital", description = "Updates the capital of a state by stateId")
-    public StateResponse updateStateCapital(@PathVariable Long stateId, @PathVariable String newCapital) {
+    public List<StateResponse> updateStateByCapital(@PathVariable Long stateId, @PathVariable String newCapital) {
         logger.info("Updating state capital for stateId={} to newCapital={}", stateId, newCapital);
-        return countryService.updateStateCapital(stateId, newCapital);
+        return countryService.updateStateByCapital(stateId, newCapital);
     }
 
     @DeleteMapping("/deleteState/{stateId}")
     @Operation(summary = "Delete State (Soft)", description = "Marks a state as inactive instead of deleting permanently")
-    public StateResponse deleteState(@PathVariable Long stateId) {
+    public List<StateResponse> deleteState(@PathVariable Long stateId) {
         logger.info("Soft-deleting (mark inactive) state with stateId={}", stateId);
         return countryService.deleteState(stateId);
     }
@@ -143,7 +143,7 @@ public class CountryController {
 
     @GetMapping("getCitiesByCityCode/{cityCode}")
     @Operation(summary = "Get City by CityCode", description = "Retrieve a single city using its cityCode")
-    public CityResponse getCitiesByCityCode(@PathVariable String cityCode) {
+    public List<CityResponse> getCitiesByCityCode(@PathVariable String cityCode) {
         logger.info("Fetching city by cityCode={}", cityCode);
         return countryService.getCitiesByCityCode(cityCode);
     }

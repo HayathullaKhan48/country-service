@@ -1,6 +1,5 @@
 package com.country.service.service;
 
-import com.country.service.entity.StateModel;
 import com.country.service.request.CountryRequest;
 import com.country.service.response.CityResponse;
 import com.country.service.response.CountryResponse;
@@ -25,21 +24,21 @@ public interface CountryService {
 
     List<StateResponse> getStatesByCountryId(Long countryId);
 
-    StateResponse getStateByStateCode(String stateCode);
+    List<StateResponse> getStateByStateCode(String stateCode);
 
-    StateResponse getStateByStateName(String stateName);
+    List<StateResponse> getStateByStateName(String stateName);
 
-    StateResponse getStateByStateCapital(String stateCapital);
+    List<StateResponse> getStateByStateCapital(String stateCapital);
 
-    StateResponse updateStateName(Long stateId, String newStateName);
+    List<StateResponse> updateStateByStateName(Long stateId, String newStateName);
 
-    StateResponse updateStateCapital(Long stateId, String newCapital);
+    List<StateResponse> updateStateByCapital(Long stateId, String newCapital);
 
-    StateResponse deleteState(Long stateId);
+    List<StateResponse> deleteState(Long stateId);
 
     List<CityResponse> getAllCities();
 
     List<CityResponse> getCitiesByStateId(Long stateId);
 
-    CityResponse getCitiesByCityCode(String cityCode);
+    List<CityResponse> getCitiesByCityCode(String cityCode);
 }

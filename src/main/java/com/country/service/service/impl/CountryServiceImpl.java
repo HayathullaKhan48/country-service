@@ -50,7 +50,6 @@ public class CountryServiceImpl implements CountryService {
             logger.error("Country with code {} already exists", request.getCountryCode());
             throw new CountryAlreadyExistsException("Country with code " + request.getCountryCode() + " already exists");
         }
-
         CountryModel countryModel = toCountryModel(request);
         CountryModel savedCountry = countryRepository.save(countryModel);
         logger.info("Country created successfully (id={} code={})", savedCountry.getCountryId(), savedCountry.getCountryCode());
@@ -153,40 +152,40 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public StateResponse getStateByStateCode(String stateCode) {
+    public List<StateResponse> getStateByStateCode(String stateCode) {
         logger.info("Fetching state by stateCode={}", stateCode);
         StateModel stateModel = stateRepository.findByStateCodeIgnoreCase(stateCode)
                 .orElseThrow(() -> {
                     logger.error("State not found with stateCode: {}", stateCode);
                     return new RuntimeException("State not found with stateCode: " + stateCode);
                 });
-        return CountryMapper.modelToStatesResponse(List.of(stateModel)).get(0);
+        return CountryMapper.modelToStatesResponse(List.of(stateModel));
     }
 
     @Override
-    public StateResponse getStateByStateName(String stateName) {
+    public List<StateResponse> getStateByStateName(String stateName) {
         logger.info("Fetching state by stateName={}", stateName);
         StateModel stateModel = stateRepository.findByStateName(stateName)
                 .orElseThrow(() -> {
                     logger.error("State not found with stateName: {}", stateName);
                     return new RuntimeException("State not found with stateName: " + stateName);
                 });
-        return CountryMapper.modelToStatesResponse(List.of(stateModel)).get(0);
+        return CountryMapper.modelToStatesResponse(List.of(stateModel));
     }
 
     @Override
-    public StateResponse getStateByStateCapital(String stateCapital) {
+    public List<StateResponse> getStateByStateCapital(String stateCapital) {
         logger.info("Fetching state by stateCapital={}", stateCapital);
         StateModel stateModel = stateRepository.findByStateCapitalIgnoreCase(stateCapital)
                 .orElseThrow(() -> {
                     logger.error("State not found with stateCapital: {}", stateCapital);
                     return new RuntimeException("State not found with stateCapital: " + stateCapital);
                 });
-        return CountryMapper.modelToStatesResponse(List.of(stateModel)).get(0);
+        return CountryMapper.modelToStatesResponse(List.of(stateModel));
     }
 
     @Override
-    public StateResponse updateStateName(Long stateId, String newStateName) {
+    public List<StateResponse> updateStateByStateName(Long stateId, String newStateName) {
         logger.info("Updating stateName for stateId={} to {}", stateId, newStateName);
         StateModel stateModel = stateRepository.findById(stateId)
                 .orElseThrow(() -> {
@@ -196,11 +195,11 @@ public class CountryServiceImpl implements CountryService {
         stateModel.setStateName(newStateName);
         StateModel updatedState = stateRepository.saveAndFlush(stateModel);
         logger.info("State (id={}) updated with new stateName={}", stateId, newStateName);
-        return CountryMapper.modelToStatesResponse(List.of(updatedState)).get(0);
+        return CountryMapper.modelToStatesResponse(List.of(updatedState));
     }
 
     @Override
-    public StateResponse updateStateCapital(Long stateId, String newCapital) {
+    public List<StateResponse> updateStateByCapital(Long stateId, String newCapital) {
         logger.info("Updating stateCapital for stateId={} to {}", stateId, newCapital);
         StateModel stateModel = stateRepository.findById(stateId)
                 .orElseThrow(() -> {
@@ -210,21 +209,20 @@ public class CountryServiceImpl implements CountryService {
         stateModel.setStateCapital(newCapital);
         StateModel updatedState = stateRepository.saveAndFlush(stateModel);
         logger.info("State (id={}) updated with new stateCapital={}", stateId, newCapital);
-        return CountryMapper.modelToStatesResponse(List.of(updatedState)).get(0);
+        return CountryMapper.modelToStatesResponse(List.of(updatedState));
     }
 
     @Override
-    public StateResponse deleteState(Long stateId) {
+    public List<StateResponse> deleteState(Long stateId) {
         logger.info("Soft deleting stateId={}", stateId);
         StateModel stateModel = stateRepository.findById(stateId)
-                .orElseThrow(() -> {
-                    logger.error("State not found with stateId: {}", stateId);
+                .orElseThrow(() -> { logger.error("States not found with stateId: {}", stateId);
                     return new RuntimeException("State not found with stateId: " + stateId);
                 });
         stateModel.setStatus(Status.INACTIVE);
         StateModel updatedState = stateRepository.saveAndFlush(stateModel);
         logger.info("State (id={}) marked as INACTIVE successfully", stateId);
-        return CountryMapper.modelToStatesResponse(List.of(updatedState)).get(0);
+        return CountryMapper.modelToStatesResponse(List.of(updatedState));
     }
 
     @Override
@@ -251,13 +249,13 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public CityResponse getCitiesByCityCode(String cityCode) {
+    public List<CityResponse> getCitiesByCityCode(String cityCode) {
         logger.info("Fetching city by cityCode={}", cityCode);
         CityModel cityModel = cityRepository.findByCityCode(cityCode)
                 .orElseThrow(() -> {
                     logger.error("City not found with cityCode: {}", cityCode);
                     return new RuntimeException("City not found with cityCode:" + cityCode);
                 });
-        return CountryMapper.modelToCitiesResponse(List.of(cityModel)).get(0);
+        return CountryMapper.modelToCitiesResponse(List.of(cityModel));
     }
 }
