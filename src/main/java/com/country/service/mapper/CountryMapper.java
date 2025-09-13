@@ -85,7 +85,7 @@ public class CountryMapper {
                 .build();
     }
 
-    private static List<StateResponse> modelToStatesResponse(List<StateModel> stateModels){
+    public static List<StateResponse> modelToStatesResponse(List<StateModel> stateModels){
         List<StateResponse> responseList = new ArrayList<>();
         stateModels.forEach(state -> responseList.add(
                 StateResponse.builder()
@@ -109,7 +109,7 @@ public class CountryMapper {
         return responseList;
     }
 
-    private static List<CityResponse> modelToCitiesResponse(List<CityModel> cityModels){
+    public static List<CityResponse> modelToCitiesResponse(List<CityModel> cityModels){
         List<CityResponse> responseList = new ArrayList<>();
         cityModels.forEach(city -> responseList.add(
                 CityResponse.builder()

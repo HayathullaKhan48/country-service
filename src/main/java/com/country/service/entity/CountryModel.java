@@ -92,6 +92,6 @@ public class CountryModel {
     private LocalDateTime updatedDate;
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Column(name = "states")
     private List<StateModel> states = new ArrayList<>();
+
 }

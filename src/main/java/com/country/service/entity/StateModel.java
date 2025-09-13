@@ -76,7 +76,6 @@ public class StateModel {
     @JoinColumn(name = "country_id")
     private CountryModel country;
 
-    @Column(name = "cities")
     @OneToMany(mappedBy = "state",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CityModel> cities = new ArrayList<>();
 }

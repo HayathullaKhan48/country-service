@@ -2,9 +2,13 @@ package com.country.service.repository;
 
 import com.country.service.entity.StateModel;
 import com.country.service.enums.Status;
+import com.country.service.response.StateResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,14 +18,12 @@ import java.util.Optional;
 @Repository
 public interface StateRepository extends JpaRepository<StateModel, Long> {
 
-    Optional<StateModel> findByStateCodeAndStatus(String stateCode, Status status);
+    List<StateModel> findByCountry_CountryId(Long countryId);
 
-    Optional<StateModel> findByStateNameAndStatus(String stateName, Status status);
+    Optional<StateModel> findByStateCodeIgnoreCase(String stateCode);
 
-    Optional<StateModel> findByStateCapitalAndStatus(String stateCapital, Status status);
+    Optional<StateModel> findByStateName(String stateName);
 
-    Optional<StateModel> findById(Long stateId);
-
-    boolean existsByStateName(String stateName);
+    Optional<StateModel> findByStateCapitalIgnoreCase(String stateCapital);
 
 }
